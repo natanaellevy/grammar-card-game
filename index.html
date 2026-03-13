@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Grammar Cards - MVP</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="game">
+    <h1 class="title">Grammar Cards</h1>
+    <div class="sentence-bar" id="status-text">Carregando desafio...</div>
+
+    <div class="board">
+        <div class="slot sujeito" data-expected="sujeito"><span class="placeholder">Sujeito</span></div>
+        <div class="slot verbo" data-expected="verbo"><span class="placeholder">Verbo</span></div>
+        <div class="slot objeto" data-expected="objeto"><span class="placeholder">Objeto</span></div>
+    </div>
+
+    <div class="cards-area" id="mesa">
+        <div class="card sujeito" id="card-I" draggable="true" data-word="I">
+            <div class="card-inner">
+                <div class="card-front"><p>I</p><img src="https://cdn-icons-png.flaticon.com/128/747/747376.png" class="card-icon"></div>
+                <div class="card-back"></div>
+            </div>
+        </div>
+
+        <div class="card sujeito" id="card-YOU" draggable="true" data-word="YOU">
+            <div class="card-inner">
+                <div class="card-front"><p>YOU</p><img src="https://cdn-icons-png.flaticon.com/128/4140/4140048.png" class="card-icon"></div>
+                <div class="card-back"></div>
+            </div>
+        </div>
+        
+        <div class="card sujeito" id="card-HE" draggable="true" data-word="HE">
+            <div class="card-inner">
+                <div class="card-front"><p>HE</p><img src="https://cdn-icons-png.flaticon.com/128/4140/4140048.png" class="card-icon"></div>
+                <div class="card-back"></div>
+            </div>
+        </div>
+
+        <div class="card verbo" id="card-EAT" draggable="true" data-word="EAT">
+            <div class="card-inner">
+                <div class="card-front"><p>EAT</p><img src="https://cdn-icons-png.flaticon.com/128/1046/1046857.png" class="card-icon"></div>
+                <div class="card-back"></div>
+            </div>
+        </div>
+
+        <div class="card verbo" id="card-LIKE" draggable="true" data-word="LIKE">
+            <div class="card-inner">
+                <div class="card-front"><p>LIKE</p><img src="https://cdn-icons-png.flaticon.com/128/2589/2589175.png" class="card-icon"></div>
+                <div class="card-back"></div>
+            </div>
+        </div>
+
+        <div class="card objeto" id="card-APPLE" draggable="true" data-word="APPLE">
+            <div class="card-inner">
+                <div class="card-front"><p>APPLE</p><img src="https://cdn-icons-png.flaticon.com/128/415/415733.png" class="card-icon"></div>
+                <div class="card-back"></div>
+            </div>
+        </div>
+
+        <div class="card objeto" id="card-MILK" draggable="true" data-word="MILK">
+            <div class="card-inner">
+                <div class="card-front"><p>MILK</p><img src="https://cdn-icons-png.flaticon.com/128/869/869476.png" class="card-icon"></div>
+                <div class="card-back"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="check-btn" id="checkBtn">VERIFICAR</button>
+        <button class="reset-btn" id="resetBtn">NOVA FRASE</button>
+    </div>
+</div>
+
+<div id="hint-character" style="position: fixed; bottom: 10px; right: 20px; display: none; align-items: flex-end; z-index: 100;">
+    <div id="speech-bubble" style="background: white; border-radius: 15px; padding: 15px; margin-bottom: 60px; margin-right: -20px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); max-width: 200px; position: relative; border: 2px solid #333; font-size: 14px; font-family: sans-serif;">
+        Ops! Falta alguma coisa...
+    </div>
+    <img src="https://artpoin.com/wp-content/uploads/2024/06/roblox-personagens-de-games7.png" width="120" alt="Personagem Auxiliar">
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
