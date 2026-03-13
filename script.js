@@ -62,16 +62,31 @@ function novoDesafio() {
     // Embaralha as cartas da rodada
     cartasRodada = cartasRodada.sort(() => Math.random() - 0.5);
 
-    // Esconde todas as cartas
+    // Esconde todas as cartas e reseta o verso
     allCards.forEach(card => {
         card.style.display = "none";
         card.classList.remove("is-flipped");
+        // Limpa feedback do verso
+        const back = card.querySelector('.card-back');
+        if (back) {
+            back.innerHTML = "";
+            back.className = "card-back";
+        }
     });
     // Mostra e reseta apenas as cartas da rodada
     cartasRodada.forEach(card => {
         card.style.display = "block";
         card.classList.remove("is-flipped");
         mesa.appendChild(card);
+    });
+
+    // Garante que os slots estejam vazios e placeholders visíveis
+    slots.forEach(slot => {
+        const card = slot.querySelector('.card');
+        if (card) mesa.appendChild(card);
+        // Mostra o placeholder
+        const placeholder = slot.querySelector('.placeholder');
+        if (placeholder) placeholder.style.display = "inline";
     });
 }
 
@@ -86,13 +101,18 @@ function falar(texto) {
     window.speechSynthesis.speak(msg);
 }
 
+
+// Drag & Drop: permite tirar carta do slot e voltar para a mesa
 allCards.forEach(card => {
     card.addEventListener("dragstart", e => {
         card.classList.remove("is-flipped");
         e.dataTransfer.setData("text", card.id);
+        // Marca origem
+        e.dataTransfer.setData("from-slot", card.parentElement.classList.contains("slot") ? "1" : "0");
     });
 });
 
+// Permite soltar carta nos slots
 slots.forEach(slot => {
     slot.addEventListener("dragover", e => e.preventDefault());
     slot.addEventListener("drop", e => {
@@ -103,9 +123,29 @@ slots.forEach(slot => {
             const existente = slot.querySelector(".card");
             if (existente) mesa.appendChild(existente);
             slot.appendChild(card);
+            // Esconde placeholder
+            const placeholder = slot.querySelector('.placeholder');
+            if (placeholder) placeholder.style.display = "none";
             falar(card.querySelector("p").innerText);
         }
     });
+});
+
+// Permite soltar carta de volta na mesa
+mesa.addEventListener("dragover", e => e.preventDefault());
+mesa.addEventListener("drop", e => {
+    e.preventDefault();
+    const cardId = e.dataTransfer.getData("text");
+    const card = document.getElementById(cardId);
+    if (card) {
+        // Se veio de um slot, mostra o placeholder de volta
+        if (card.parentElement.classList.contains("slot")) {
+            const slot = card.parentElement;
+            const placeholder = slot.querySelector('.placeholder');
+            if (placeholder) placeholder.style.display = "inline";
+        }
+        mesa.appendChild(card);
+    }
 });
 
 resetBtn.addEventListener("click", novoDesafio);
@@ -148,7 +188,7 @@ checkBtn.addEventListener("click", () => {
         const gabarito = fraseAtual[tipo];
 
         if (palavraNaCarta === gabarito.palavra) {
-            back.innerHTML = `<b>Very Good!</b><br>${gabarito.trans}`;
+            back.innerHTML = `${gabarito.trans}`;
             back.className = "card-back back-correct";
             acertos++;
         } else {

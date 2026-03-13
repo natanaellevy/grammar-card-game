@@ -2,7 +2,7 @@
 body {
     margin: 0;
     font-family: 'Arial', sans-serif;
-    background: #0b5e20;
+    background: #F8F8F8;
     display: flex;
     justify-content: center;
     min-height: 100vh;
@@ -17,7 +17,7 @@ body {
 }
 
 .title {
-    color: white;
+    color: #3bb36d;
     margin-bottom: 20px;
     font-size: 2rem;
 }
@@ -32,7 +32,6 @@ body {
     box-shadow: 0 3px 6px rgba(0,0,0,0.4);
 }
 
-/* --- BOARD E SLOTS --- */
 /* --- BOARD E SLOTS --- */
 .board {
     display: flex;
@@ -51,7 +50,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: black;
     position: relative;
     transition: background 0.3s;
     min-width: 90px;
@@ -66,7 +65,6 @@ body {
 /* Esconde o placeholder quando o slot tem uma carta */
 .slot:has(.card) .placeholder { display: none; }
 
-/* --- ESTRUTURA DA CARTA (3D) --- */
 /* --- ESTRUTURA DA CARTA (3D) --- */
 .card {
     width: 100px;
@@ -151,7 +149,6 @@ body {
 }
 
 /* --- BOTÕES --- */
-/* --- BOTÕES --- */
 .controls {
     margin-top: 20px;
     display: flex;
@@ -174,8 +171,8 @@ body {
 .check-btn { background: #ffd54f; }
 .check-btn:hover { background: #ffca28; }
 
-.reset-btn { background: #ff4f4f; color: white; }
-.reset-btn:hover { background: #fc3e3e; }
+.reset-btn { background: #2ecc71; color: white; }
+.reset-btn:hover { background: #27ae60; }
 
 /* Bordas coloridas para as cartas na mesa */
 .card.sujeito { border-radius: 8px; box-shadow: 0 0 0 2px #3498db; }
