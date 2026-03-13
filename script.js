@@ -14,16 +14,46 @@ const frasesDesafio = [
         objeto: { palavra: "APPLE", trans: "Maçã" } 
     },
     { 
+        texto: "I LIKE MILK", 
+        sujeito: { palavra: "I", trans: "Eu" }, 
+        verbo: { palavra: "LIKE", trans: "Gosto de" }, 
+        objeto: { palavra: "MILK", trans: "Leite" } 
+    },
+    { 
+        texto: "YOU EAT APPLE", 
+        sujeito: { palavra: "YOU", trans: "Você" }, 
+        verbo: { palavra: "EAT", trans: "Come" }, 
+        objeto: { palavra: "APPLE", trans: "Maçã" } 
+    },
+    { 
         texto: "YOU LIKE MILK", 
         sujeito: { palavra: "YOU", trans: "Você" }, 
         verbo: { palavra: "LIKE", trans: "Gosta de" }, 
         objeto: { palavra: "MILK", trans: "Leite" } 
     },
     { 
-        texto: "HE EAT APPLE", // Exemplo de mudança gramatical
+        texto: "HE EATS APPLE",
         sujeito: { palavra: "HE", trans: "Ele" }, 
-        verbo: { palavra: "EAT", trans: "Come" }, 
+        verbo: { palavra: "EATS", trans: "Come" }, 
         objeto: { palavra: "APPLE", trans: "Maçã" } 
+    },
+    { 
+        texto: "HE LIKES MILK",
+        sujeito: { palavra: "HE", trans: "Ele" }, 
+        verbo: { palavra: "LIKES", trans: "Gosta de" }, 
+        objeto: { palavra: "MILK", trans: "Leite" } 
+    },
+    { 
+        texto: "SHE EATS APPLE",
+        sujeito: { palavra: "SHE", trans: "Ela" }, 
+        verbo: { palavra: "EATS", trans: "Come" }, 
+        objeto: { palavra: "APPLE", trans: "Maçã" } 
+    },
+    { 
+        texto: "SHE LIKES MILK",
+        sujeito: { palavra: "SHE", trans: "Ela" }, 
+        verbo: { palavra: "LIKES", trans: "Gosta de" }, 
+        objeto: { palavra: "MILK", trans: "Leite" } 
     }
 ];
 
@@ -120,10 +150,21 @@ slots.forEach(slot => {
         const cardId = e.dataTransfer.getData("text");
         const card = document.getElementById(cardId);
         if (card) {
+            // Se já tem carta, devolve para a mesa desvirada e mostra placeholder
             const existente = slot.querySelector(".card");
-            if (existente) mesa.appendChild(existente);
+            if (existente) {
+                existente.classList.remove("is-flipped"); // <--- GARANTE QUE DESVIRE
+                mesa.appendChild(existente);
+                const placeholderOrigem = slot.querySelector('.placeholder');
+                if (placeholderOrigem) placeholderOrigem.style.display = "inline";
+            }
+            
+            const parent = card.parentElement;
+            if (parent.classList.contains("slot")) {
+                const placeholderOrigem = parent.querySelector('.placeholder');
+                if (placeholderOrigem) placeholderOrigem.style.display = "inline";
+            }
             slot.appendChild(card);
-            // Esconde placeholder
             const placeholder = slot.querySelector('.placeholder');
             if (placeholder) placeholder.style.display = "none";
             falar(card.querySelector("p").innerText);
@@ -138,10 +179,11 @@ mesa.addEventListener("drop", e => {
     const cardId = e.dataTransfer.getData("text");
     const card = document.getElementById(cardId);
     if (card) {
-        // Se veio de um slot, mostra o placeholder de volta
-        if (card.parentElement.classList.contains("slot")) {
-            const slot = card.parentElement;
-            const placeholder = slot.querySelector('.placeholder');
+        card.classList.remove("is-flipped"); // <--- GARANTE QUE DESVIRE AO CAIR NA MESA
+        
+        const parent = card.parentElement;
+        if (parent.classList.contains("slot")) {
+            const placeholder = parent.querySelector('.placeholder');
             if (placeholder) placeholder.style.display = "inline";
         }
         mesa.appendChild(card);
@@ -188,20 +230,35 @@ checkBtn.addEventListener("click", () => {
         const gabarito = fraseAtual[tipo];
 
         if (palavraNaCarta === gabarito.palavra) {
+            // ACERTO
             back.innerHTML = `${gabarito.trans}`;
             back.className = "card-back back-correct";
+            card.classList.add("is-flipped");
             acertos++;
         } else {
+            // ERRO
             back.innerHTML = `<b>Try Again!</b>`;
             back.className = "card-back back-wrong";
+            card.classList.add("is-flipped");
+
+            // NOVA LÓGICA: Espera 2 segundos, desvira e volta pra mesa
+            setTimeout(() => {
+                // Verifica se a carta ainda está no slot (o usuário pode ter puxado antes do tempo acabar)
+                if (slot.contains(card)) {
+                    card.classList.remove("is-flipped"); // Desvira
+                    mesa.appendChild(card); // Joga de volta pra mesa
+                    
+                    // Mostra o placeholder do slot novamente
+                    const placeholder = slot.querySelector('.placeholder');
+                    if (placeholder) placeholder.style.display = "inline";
+                }
+            }, 2000); // 2000 milissegundos = 2 segundos
         }
-        card.classList.add("is-flipped");
     });
 
     if (acertos === 3) {
         statusText.innerText = "Parabéns! Você completou a frase!";
         statusText.style.color = "#2ecc71";
-        // Esconde o botão de verificar e mostra o de nova frase
         checkBtn.style.display = "none";
         resetBtn.style.display = "inline-block";
     } else {
@@ -210,3 +267,19 @@ checkBtn.addEventListener("click", () => {
         }, 1000);
     }
 });
+
+// Exemplo de como o navegador salvaria o progresso
+let progressoUsuario = {
+    faseAtual: 1,
+    estrelas: {
+        fase1: 3,
+        fase2: 0,
+        fase3: 0
+    }
+};
+
+// Para salvar:
+localStorage.setItem('grammarCardsProgresso', JSON.stringify(progressoUsuario));
+
+// Para ler quando o jogo abrir:
+const salvo = JSON.parse(localStorage.getItem('grammarCardsProgresso'));
